@@ -1,0 +1,7 @@
+{
+  "name": "textjam-cli",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Source of the unscoped `textjam` npm package — a thin shim that runs the current edition.",
+  "main": "cli.js"
+}

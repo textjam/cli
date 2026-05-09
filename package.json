@@ -1,0 +1,18 @@
+{
+  "name": "textjam",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "editions/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "spring2026": "bun --filter '@textjam/spring2026-edition' dev",
+    "build": "bun scripts/prepare-npm.ts",
+    "publish:npm": "./scripts/publish-npm.sh"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5"
+  }
+}

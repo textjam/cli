@@ -1,0 +1,13 @@
+{
+  "name": "@textjam/spring2026-edition",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "module": "index.ts",
+  "scripts": {
+    "dev": "bun index.ts"
+  },
+  "dependencies": {
+    "@opentui/core": "^0.2.6"
+  }
+}
