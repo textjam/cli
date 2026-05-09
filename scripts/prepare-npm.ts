@@ -33,29 +33,33 @@ const TARGETS: Target[] = [
   { platform: "win32", arch: "x64", bunTarget: "bun-windows-x64", exeSuffix: ".exe" },
 ]
 
-interface Edition {
-  name: string // e.g. "spring2026"
-  dir: string // absolute path to editions/<name>
-  version: string // from edition's package.json
+interface EditionMeta {
+  name: string
   description: string
   homepage: string
-  bugs: string
-  dates: string // "may 8 → june 7, 2026"
+  dates: string
 }
 
-const EDITIONS: Edition[] = [
-  {
-    name: "spring2026",
-    dir: join(repoRoot, "editions", "spring2026"),
-    version: "0.1.0",
-    description:
-      "A tiny text-adventure poster for textjam spring2026 — a text-based thing jam (May 8 → Jun 7, 2026).",
-    homepage: "https://textjam.github.io/spring2026/",
-    bugs: "https://github.com/textjam/cli/issues",
-    dates: "may 8 → june 7, 2026",
-  },
-]
+interface Edition extends EditionMeta {
+  dir: string
+  version: string
+  bugs: string
+}
 
+const BUGS_URL = "https://github.com/textjam/cli/issues"
+const REPO_URL = "https://github.com/textjam/cli.git"
+
+function loadEdition(name: string): Edition {
+  const dir = join(repoRoot, "editions", name)
+  const meta: EditionMeta = JSON.parse(readFileSync(join(dir, "edition.json"), "utf8"))
+  if (meta.name !== name) {
+    throw new Error(`edition.json name mismatch: ${meta.name} vs directory ${name}`)
+  }
+  const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8")) as { version: string }
+  return { ...meta, dir, version: pkg.version, bugs: BUGS_URL }
+}
+
+const EDITIONS: Edition[] = [loadEdition("spring2026")]
 const CURRENT_EDITION = "spring2026"
 
 // ─── clean output ───────────────────────────────────────────────────────────
@@ -190,7 +194,7 @@ child.on("error", (err) => {
           keywords: ["textjam", "gamejam", "tui", "poster", "ascii"],
           homepage: ed.homepage,
           bugs: { url: ed.bugs },
-          repository: { type: "git", url: "https://github.com/textjam/cli.git", directory: `editions/${ed.name}` },
+          repository: { type: "git", url: REPO_URL, directory: `editions/${ed.name}` },
           license: "MIT",
           bin: { [`textjam-${ed.name}`]: "cli.js" },
           files: ["cli.js", "README.md"],
@@ -240,8 +244,13 @@ Only know basic python? Even \`print("hello world")\` is a valid submission. :)
   const pkgDir = join(distNpm, "textjam")
   mkdirSync(pkgDir, { recursive: true })
 
-  const srcCli = readFileSync(join(repoRoot, "packages", "textjam-cli", "cli.js"), "utf8")
-  writeFileSync(join(pkgDir, "cli.js"), srcCli)
+  // Render the squat shim from its template, substituting placeholders
+  // with current-edition metadata.
+  const template = readFileSync(join(repoRoot, "packages", "textjam-cli", "cli.template.js"), "utf8")
+  const cliJs = template
+    .replaceAll("__TEXTJAM_EDITION_NAME__", ed.name)
+    .replaceAll("__TEXTJAM_EDITION_DATES__", ed.dates)
+  writeFileSync(join(pkgDir, "cli.js"), cliJs)
   chmodSync(join(pkgDir, "cli.js"), 0o755)
 
   const optionalDeps: Record<string, string> = {}
@@ -256,8 +265,8 @@ Only know basic python? Even \`print("hello world")\` is a valid submission. :)
         description: `A text-based thing jam. Run \`npx ${SCOPE}/${ed.name}\` for the current edition.`,
         keywords: ["textjam", "gamejam"],
         homepage: "https://textjam.github.io/",
-        bugs: { url: "https://github.com/textjam/cli/issues" },
-        repository: { type: "git", url: "https://github.com/textjam/cli.git" },
+        bugs: { url: BUGS_URL },
+        repository: { type: "git", url: REPO_URL },
         license: "MIT",
         bin: { textjam: "cli.js" },
         files: ["cli.js", "README.md"],
