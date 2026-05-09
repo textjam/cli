@@ -51,7 +51,7 @@ const EDITIONS: Edition[] = [
     description:
       "A tiny text-adventure poster for textjam spring2026 — a text-based thing jam (May 8 → Jun 7, 2026).",
     homepage: "https://textjam.github.io/spring2026/",
-    bugs: "https://github.com/textjam/textjam/issues",
+    bugs: "https://github.com/textjam/cli/issues",
     dates: "may 8 → june 7, 2026",
   },
 ]
@@ -190,7 +190,7 @@ child.on("error", (err) => {
           keywords: ["textjam", "gamejam", "tui", "poster", "ascii"],
           homepage: ed.homepage,
           bugs: { url: ed.bugs },
-          repository: { type: "git", url: "https://github.com/textjam/textjam.git", directory: `editions/${ed.name}` },
+          repository: { type: "git", url: "https://github.com/textjam/cli.git", directory: `editions/${ed.name}` },
           license: "MIT",
           bin: { [`textjam-${ed.name}`]: "cli.js" },
           files: ["cli.js", "README.md"],
@@ -256,8 +256,8 @@ Only know basic python? Even \`print("hello world")\` is a valid submission. :)
         description: `A text-based thing jam. Run \`npx ${SCOPE}/${ed.name}\` for the current edition.`,
         keywords: ["textjam", "gamejam"],
         homepage: "https://textjam.github.io/",
-        bugs: { url: "https://github.com/textjam/textjam/issues" },
-        repository: { type: "git", url: "https://github.com/textjam/textjam.git" },
+        bugs: { url: "https://github.com/textjam/cli/issues" },
+        repository: { type: "git", url: "https://github.com/textjam/cli.git" },
         license: "MIT",
         bin: { textjam: "cli.js" },
         files: ["cli.js", "README.md"],
