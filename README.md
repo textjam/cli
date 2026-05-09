@@ -1,7 +1,5 @@
 # textjam
 
-A text-based thing jam — and the source for the little CLI experiences that announce it.
-
 ```sh
 npx textjam
 # or, equivalently:
@@ -21,8 +19,6 @@ npx @textjam/spring2026
     ├── prepare-npm.ts  # cross-compiles binaries, stages dist/npm/*
     └── publish-npm.sh  # npm publish loop
 ```
-
-This is a [Bun](https://bun.sh) workspaces monorepo.
 
 ## Develop a new edition
 
@@ -46,14 +42,3 @@ Each edition becomes:
 - `@textjam/<edition>-<platform>-<arch>` — prebuilt binary holders (5 of these)
 
 The unscoped `textjam` package ships as a thin shim that runs the **current edition** (currently `spring2026`).
-
-## Editions
-
-| Edition | Dates | Status |
-|---|---|---|
-| spring2026 | May 8 → Jun 7, 2026 | active |
-
-## Links
-
-- <https://textjam.github.io/>
-- <https://github.com/textjam>
